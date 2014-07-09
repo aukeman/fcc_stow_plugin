@@ -46,19 +46,19 @@ function fcc_stow_sermon_add_meta_boxes()
 		FCC_STOW_SERMONS_TYPE );
 }
 
-function fcc_stow_sermon_add_scripture_meta_boxes()
-{
-  include( dirname(__FILE__) . 
-	   "/../templates/scripture_meta_box.php" );
-}
-
-function fcc_stow_sermon_add_guest_speaker_meta_boxes()
+function fcc_stow_sermon_add_guest_speaker_meta_boxes($post)
 {
   include( dirname(__FILE__) . 
 	   "/../templates/guest_speaker_meta_box.php" );
 }
 
-function fcc_stow_sermon_add_audio_file_meta_boxes()
+function fcc_stow_sermon_add_scripture_meta_boxes($post)
+{
+  include( dirname(__FILE__) . 
+	   "/../templates/scripture_meta_box.php" );
+}
+
+function fcc_stow_sermon_add_audio_file_meta_boxes($post)
 {
   include( dirname(__FILE__) . 
 	   "/../templates/audio_file_meta_box.php" );
@@ -68,11 +68,28 @@ function fcc_stow_sermon_save($post_id)
 {
   if ( !isset($_POST['post_type']) ||
        $_POST['post_type'] != FCC_STOW_SERMONS_TYPE ||
-       !current_user_can('edit_post', $post_id) )
+       !current_user_can('edit_post', $post_id) ||
+
+       // Stop WP from clearing custom fields on autosave
+       (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ||
+       
+       // Prevent quick edit from clearing custom fields
+       (defined('DOING_AJAX') && DOING_AJAX) )
   {
     return;
   }
 
+  foreach( array( 'fcc-stow-sermon-guest-speaker',
+		  'fcc-stow-sermon-scripture-1',
+		  'fcc-stow-sermon-scripture-2',
+		  'fcc-stow-sermon-scripture-3',
+		  'fcc-stow-sermon-scripture-4',
+		  'fcc-stow-sermon-audio-file' ) as $field )
+  {
+    update_post_meta( $post_id, 
+		      $field, 
+		      sanitize_text_field( $_REQUEST[$field] ) );
+  }
 }
 
 function fcc_stow_sermon_rewrite_flush()

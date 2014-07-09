@@ -6,7 +6,7 @@
              type="text" 
     	     id="fcc-stow-sermon-scripture-1" 
 	     name="fcc-stow-sermon-scripture-1" 
-	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-1'); ?>" />
+	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-1', true); ?>" />
     </td>
   </tr>
   <tr valign="top">
@@ -23,7 +23,7 @@
              type="text" 
     	     id="fcc-stow-sermon-scripture-2" 
 	     name="fcc-stow-sermon-scripture-2" 
-	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-2'); ?>" />
+	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-2', true); ?>" />
     </td>
   </tr>
   <tr valign="top">
@@ -33,7 +33,7 @@
              type="text" 
     	     id="fcc-stow-sermon-scripture-3" 
 	     name="fcc-stow-sermon-scripture-3" 
-	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-3'); ?>" />
+	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-3', true); ?>" />
     </td>
   </tr>
   <tr valign="top">
@@ -43,7 +43,7 @@
              type="text" 
     	     id="fcc-stow-sermon-scripture-4" 
 	     name="fcc-stow-sermon-scripture-4" 
-	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-4'); ?>" />
+	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-scripture-4', true); ?>" />
     </td>
   </tr>
 </table>

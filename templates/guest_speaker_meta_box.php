@@ -6,5 +6,5 @@
 	     type="text" 
     	     id="fcc-stow-sermon-guest-speaker" 
 	     name="fcc-stow-sermon-guest-speaker" 
-	     value="<?php echo @get_post_meta($post->ID, 'fcc-stow-sermon-guest-speaker'); ?>" />
+	     value="<?php echo get_post_meta($post->ID, 'fcc-stow-sermon-guest-speaker', true); ?>" />
 </div>
