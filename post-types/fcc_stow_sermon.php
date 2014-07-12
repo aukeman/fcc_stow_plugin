@@ -1,6 +1,7 @@
 <?php
 
-const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermons";
+const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermon";
+const FCC_STOW_SERMONS_PAGE_SETTING = "fcc-stow-sermon-sermons-page";
 
 function fcc_stow_sermon_init()
 {
@@ -26,6 +27,20 @@ function fcc_stow_sermon_init()
 function fcc_stow_sermon_admin_init()
 {
   add_action( "add_meta_boxes", "fcc_stow_sermon_add_meta_boxes" );
+
+  register_setting( 'fcc_stow_sermon_setting-group', 
+		    FCC_STOW_SERMONS_PAGE_SETTING );
+
+  add_settings_section( 'fcc_stow_sermon_setting-section', 
+			'Sermon Settings', 
+			'fcc_stow_sermon_settings_section', 
+                        'fcc_stow_sermon_setting' );
+
+  add_settings_field('fcc_stow_sermon_setting-sermons_page', 
+                'Sermons Page', 
+		'fcc_stow_sermon_settings_add_page', 
+                'fcc_stow_sermon_setting', 
+                'fcc_stow_sermon_setting-section' );
 }
 
 function fcc_stow_sermon_add_meta_boxes()
@@ -44,6 +59,40 @@ function fcc_stow_sermon_add_meta_boxes()
 		"Set Audio File",
 		"fcc_stow_sermon_add_audio_file_meta_boxes",
 		FCC_STOW_SERMONS_TYPE );
+}
+
+function fcc_stow_sermon_settings_section()
+{
+  echo "Set the page on which the list of sermons will be rendered";
+}
+
+function fcc_stow_sermon_settings_add_page()
+{
+  include ( dirname(__FILE__) . 
+	   "/../templates/generate_select_page_dropdown.php" );
+
+  generate_select_page_dropdown(FCC_STOW_SERMONS_PAGE_SETTING,
+				get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1));
+}
+
+function fcc_stow_sermon_setting_menu()
+{
+  add_options_page('Sermon Settings', 
+        	   'Sermon', 
+        	   'manage_options', 
+        	   'fcc_stow_sermon', 
+		   'fcc_stow_sermon_settings_page');
+}
+
+function fcc_stow_sermon_settings_page()
+{
+  if(!current_user_can('manage_options'))
+    {
+      wp_die(__('You do not have sufficient permissions to access this page.'));
+    }
+	
+  // Render the settings template
+  include(dirname(__FILE__) . "/../templates/settings.php" );
 }
 
 function fcc_stow_sermon_add_guest_speaker_meta_boxes($post)
@@ -92,6 +141,32 @@ function fcc_stow_sermon_save($post_id)
   }
 }
 
+function fcc_stow_sermon_template_redirect( $query )
+{
+  if ( is_page( get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1) ) )
+  {
+    add_filter( 'the_content', 'fcc_stow_sermon_append_sermon_content' );
+  }
+}
+
+function fcc_stow_sermon_append_sermon_content( $content )
+{
+  $content = $content . "<ul>";
+
+  $query = new WP_Query( "post_type=".FCC_STOW_SERMONS_TYPE );
+
+  // The Loop
+  while ( $query->have_posts() ) 
+  {
+	$query->next_post();
+	$content = $content . "<li>" . get_the_title($query->post->ID) . "</li>";
+  }
+
+  wp_reset_postdata();
+
+  return $content . "</ul>";
+}
+
 function fcc_stow_sermon_rewrite_flush()
 {
   fcc_stow_sermon_init();
@@ -113,7 +188,9 @@ function fcc_stow_sermon_after_switch_theme()
 
 add_action( "init", "fcc_stow_sermon_init" );
 add_action( "admin_init", "fcc_stow_sermon_admin_init" );
+add_action('admin_menu', 'fcc_stow_sermon_setting_menu');
 add_action( "save_post", "fcc_stow_sermon_save" );
+add_action( "template_redirect", "fcc_stow_sermon_template_redirect" );
 add_action( "after_switch_theme", "fcc_stow_sermon_after_switch_theme" );
 register_activation_hook( __FILE__, "fcc_stow_sermon_plugin_activation" );
 
