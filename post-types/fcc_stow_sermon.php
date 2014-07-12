@@ -68,11 +68,11 @@ function fcc_stow_sermon_settings_section()
 
 function fcc_stow_sermon_settings_add_page()
 {
-  include ( dirname(__FILE__) . 
-	   "/../templates/generate_select_page_dropdown.php" );
+  $field_id = FCC_STOW_SERMONS_PAGE_SETTING;
+  $selected_page_id = get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1);
 
-  generate_select_page_dropdown(FCC_STOW_SERMONS_PAGE_SETTING,
-				get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1));
+  include ( dirname(__FILE__) . 
+	   "/../templates/select_page_dropdown.php" );
 }
 
 function fcc_stow_sermon_setting_menu()
@@ -145,26 +145,16 @@ function fcc_stow_sermon_template_redirect( $query )
 {
   if ( is_page( get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1) ) )
   {
-    add_filter( 'the_content', 'fcc_stow_sermon_append_sermon_content' );
+    add_filter( 'the_content', 'fcc_stow_sermon_append_sermon_page_content' );
   }
 }
 
-function fcc_stow_sermon_append_sermon_content( $content )
+function fcc_stow_sermon_append_sermon_page_content( $content )
 {
-  $content = $content . "<ul>";
-
-  $query = new WP_Query( "post_type=".FCC_STOW_SERMONS_TYPE );
-
-  // The Loop
-  while ( $query->have_posts() ) 
-  {
-	$query->next_post();
-	$content = $content . "<li>" . get_the_title($query->post->ID) . "</li>";
-  }
-
-  wp_reset_postdata();
-
-  return $content . "</ul>";
+  ob_start();
+  include ( dirname(__FILE__) . 
+	   "/../templates/sermons_page.php" );
+  return $content . ob_get_clean();
 }
 
 function fcc_stow_sermon_rewrite_flush()
