@@ -153,7 +153,7 @@ function fcc_stow_sermon_append_sermon_page_content( $content )
 {
   ob_start();
   include ( dirname(__FILE__) . 
-	   "/../templates/sermons_page.php" );
+	   "/../templates/archive-fcc-stow-sermon-archive.php" );
   return $content . ob_get_clean();
 }
 
