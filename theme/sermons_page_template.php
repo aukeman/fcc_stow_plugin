@@ -24,42 +24,32 @@ div.entry-content
 
 div.fcc-stow-sermon-post
 {
-    position:relative;
-    padding-left: 7em;
-    padding-right: 7em;
+ overflow:hidden;
 }
 
 div.fcc-stow-sermon-post h2,span,a
 {
+ display:inline-block;
 }
 
 div.fcc-stow-sermon-post span.fcc-stow-sermon-date
 {
-    position:absolute;
-    left:0em;
+ width:7em;
 }
 
 
 div.fcc-stow-sermon-post span.fcc-stow-sermon-title
 {
-
+ width:20em;
 }
 
 div.fcc-stow-sermon-post span.fcc-stow-sermon-speaker
 {
-	position:absolute; 
-	right: 5em;
-
-	padding-left: 0.5em;
-	width: 15em; 
-	background-color: white;
-	
 }
 
 div.fcc-stow-sermon-post a.fcc-stow-sermon-audio-file
 {
-    position:absolute;
-    right:0em;
+  float:right;
 }
       </style>
       <?php while ( have_posts() ) : the_post(); ?>

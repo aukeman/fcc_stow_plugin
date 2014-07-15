@@ -1,6 +1,3 @@
-<style type="text/css">
-<?php include( dirname(__FILE__)."/../stylesheets/sermon_archive.css" ); ?>
-</style>
 <?php
 
 // uses
