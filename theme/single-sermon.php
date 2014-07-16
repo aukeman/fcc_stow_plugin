@@ -20,7 +20,7 @@ get_header(); ?>
 						<span class="nav-next"><?php next_post_link( '%link', __( 'Next <span class="meta-nav">&rarr;</span>', 'twentyeleven' ) ); ?></span>
 					</nav><!-- #nav-single -->
 					<div id="post-<?php the_ID() ?>" <?php post_class()?>>
-					  <h1><?php the_title() ?></h1>
+    <h1><?php echo fcc_stow_sermon_apply_quotes_to_title( get_the_title() ) ?></h1>
 					  <div><?php echo get_the_date() ?></div>
 					  <div><?php $guest_speaker = 
 						      get_post_meta( get_the_ID(), 	   

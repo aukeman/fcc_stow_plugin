@@ -22,6 +22,7 @@ function fcc_stow_sermon_init()
 		 "supports" => array( "title", "author", "excerpt", "editor" ));
 
   register_post_type( FCC_STOW_SERMONS_TYPE, $args );
+
 }
 
 function fcc_stow_sermon_admin_init()
@@ -155,6 +156,21 @@ function fcc_stow_sermon_append_sermon_page_content( $content )
   include ( dirname(__FILE__) . 
 	   "/../templates/archive-fcc-stow-sermon-archive.php" );
   return $content . ob_get_clean();
+}
+
+function fcc_stow_sermon_apply_quotes_to_title($title)
+{
+  if ( substr($title, 1) != '"' )
+  {
+    $title = '"'.$title;
+  }
+
+  if ( substr($title, -1) !=  '"')
+  {
+    $title = $title.'"';
+  }
+
+  return $title;
 }
 
 function fcc_stow_sermon_rewrite_flush()
