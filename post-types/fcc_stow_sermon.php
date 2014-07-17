@@ -3,6 +3,48 @@
 const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermon";
 const FCC_STOW_SERMONS_PAGE_SETTING = "fcc-stow-sermon-sermons-page";
 
+function fcc_stow_sermon_the_speaker()
+{
+   $guest_speaker = 
+     get_post_meta( get_the_ID(), 	   
+                    'fcc-stow-sermon-guest-speaker', 
+		    true ); 
+			 
+   echo ($guest_speaker == "" ? the_author() : htmlspecialchars( $guest_speaker) );
+}
+
+function fcc_stow_sermon_the_audio_file_link( $class = "fcc-stow-sermon-audio-file", 
+                                              $link_text = "Listen..." )
+{
+  $audio_file = get_post_meta( get_the_ID(),
+                               'fcc-stow-sermon-audio-file',
+                               true );
+
+  if ( $audio_file != "" )
+  {
+?>
+<a class="<?php echo $class ?>" href="<?php echo $audio_file ?>"><?php echo urlencode($link_text) ?></a>
+<?php
+  }
+}
+
+function fcc_stow_sermon_the_scripture_passages( $class = "fcc-stow-sermon-scripture" )
+{
+  foreach ( array(1, 2, 3, 4) as $id ) 
+  {
+    $passage = get_post_meta( get_the_ID(),
+                              'fcc-stow-sermon-scripture-'.$id,
+                              true );
+
+    if ( $passage != "" )
+    {
+?>
+      <div class="<?php echo $class ?>"><?php echo htmlspecialchars( $passage ) ?></div>
+<?php 
+    }
+  }
+}
+
 function fcc_stow_sermon_init()
 {
   $labels = array( "name"               => "Sermons",
@@ -19,7 +61,7 @@ function fcc_stow_sermon_init()
   $args = array( "labels" => $labels,
 		 "public" => true,
 		 "rewrite" => array( "slug" => "sermon" ),
-		 "supports" => array( "title", "author", "excerpt", "editor" ));
+		 "supports" => array( "title", "author", "editor" ));
 
   register_post_type( FCC_STOW_SERMONS_TYPE, $args );
 
@@ -156,21 +198,6 @@ function fcc_stow_sermon_append_sermon_page_content( $content )
   include ( dirname(__FILE__) . 
 	   "/../templates/archive-fcc-stow-sermon-archive.php" );
   return $content . ob_get_clean();
-}
-
-function fcc_stow_sermon_apply_quotes_to_title($title)
-{
-  if ( substr($title, 1) != '"' )
-  {
-    $title = '"'.$title;
-  }
-
-  if ( substr($title, -1) !=  '"')
-  {
-    $title = $title.'"';
-  }
-
-  return $title;
 }
 
 function fcc_stow_sermon_rewrite_flush()
