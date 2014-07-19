@@ -19,7 +19,7 @@ function fcc_stow_sermon_the_audio_file_link( $class = "fcc-stow-sermon-audio-fi
   $audio_file = get_post_meta( get_the_ID(),
                                'fcc-stow-sermon-audio-file',
                                true );
-  if ( isset($audio_file) )
+  if ( !empty($audio_file) )
   {
 ?>
     <a class="<?php echo $class ?>" href="<?php echo ($audio_file["url"]) ?>"><?php echo htmlspecialchars($link_text) ?></a>
@@ -187,52 +187,31 @@ function fcc_stow_sermon_save($post_id)
 		      sanitize_text_field( $_REQUEST[$field] ) );
   }
 
-    error_log( "looking for files" );
+  if ( isset( $_REQUEST['fcc-stow-sermon-remove-audio-file'] ) )
+  {
+    delete_post_meta( $post_id, 'fcc-stow-sermon-audio-file' );
+  }
+
+  $sermon_file_info=$_FILES['fcc-stow-sermon-upload-audio-file'];
 
   // Make sure the file array isn't empty
-  if(!empty($_FILES['fcc-stow-sermon-audio-file']['name'])) 
+  if(!empty($sermon_file_info['name'])) 
   {
-    error_log( "found a file" );
-
-      // Setup the array of supported file types. In this case, it's just PDF.
-    $supported_types = array('audio/mp3','audio/mp4', 'audio/mpeg');
-         
-      // Get the file type of the upload
-      $arr_file_type = 
-	wp_check_filetype(basename($_FILES['fcc-stow-sermon-audio-file']['name']));
-      $uploaded_type = $arr_file_type['type'];
-         
-      // Check if the type is supported. If not, throw an error.
-      if(in_array($uploaded_type, $supported_types)) 
-      {
-	  // Use the WordPress API to upload the file
-	  $upload = 
-	    wp_upload_bits($_FILES['fcc-stow-sermon-audio-file']['name'], 
-			   null, 
-			   file_get_contents($_FILES['fcc-stow-sermon-audio-file']['tmp_name']));
+    // Use the WordPress API to upload the file
+    $upload = 
+      wp_upload_bits($sermon_file_info['name'], 
+		     null, 
+		     file_get_contents($sermon_file_info['tmp_name']));
      
-	  if(isset($upload['error']) && $upload['error'] != 0) 
-	    {
-    error_log( "could not  upload file: ".$upload['error'] );
-
-
-	      wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
-            } 
-	  else 
-	    {
-    error_log( "updating post" );
-
-	      update_post_meta($post_id, 'fcc-stow-sermon-audio-file', $upload);		    
-	    } // end if/else
-      } 
-      else 
-      {
-    error_log( "not supported format: ".$uploaded_type );
-
-
-	  wp_die("The file type that you've uploaded is not a supported audio format.");
-      } // end if/else
-    } // end if
+    if(isset($upload['error']) && $upload['error'] != 0) 
+    {
+      wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+    } 
+    else 
+    {
+      update_post_meta($post_id, 'fcc-stow-sermon-audio-file', $upload);
+    } // end if/else
+  } // end if
 }
 
 function fcc_stow_sermon_template_redirect( $query )

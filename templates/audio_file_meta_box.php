@@ -1,26 +1,28 @@
-<div id="fcc-stow-sermon-selected-audio-file-container">
 <?php 
-$input_tag_html="Upload Sermon Audio File
-      <input style=\"width:100%\"
-	     type=\"file\" 
-    	     id=\"fcc-stow-sermon-audio-file\" 
-	     name=\"fcc-stow-sermon-audio-file\"
-	     value=\"\" />";
-$audio_file=get_post_meta($post->ID, 'fcc-stow-sermon-audio-file', true);
-if ( isset($audio_file) ) : ?>
-  Sermon Audio File
-  <div><?php echo basename($audio_file["file"]) ?></div>
-  <button id="fcc-stow-sermon-pick-new-file-button">Pick a new file</button>
-<?php else : echo $input_tag_html ?>
-<?php endif ?>
+  $audio_file=get_post_meta($post->ID, 'fcc-stow-sermon-audio-file', true); ?>
+<div id="fcc-stow-sermon-selected-audio-file-container">
+  <div>Selected Audio File:</div>
+  <?php if ( !empty($audio_file) ) : ?>
+  <input class="fcc-stow-sermon-selected-audio-file" 
+         name="fcc-stow-sermon-selected-audio-file" 
+         id="fcc-stow-sermon-selected-audio-file"
+         value=<?php echo basename($audio_file["file"]); ?> 
+         type="text"  
+         readonly="readonly" />
+  <input class="fcc-stow-sermon-remove-audio-file" 
+         name="fcc-stow-sermon-remove-audio-file" 
+         id="fcc-stow-sermon-remove-audio-file"
+         value="remove"
+         type="checkbox">
+    Remove Audio File?
+  </input>
+  <?php endif ?>
+    <div>Upload <?php echo isset($audio_file) ? "New" : "" ?> Sermon Audio File</div>
+  <input style="width:100%"
+	 type="file" 
+    	 id="fcc-stow-sermon-upload-audio-file" 
+	 name="fcc-stow-sermon-upload-audio-file"
+    	 class="fcc-stow-sermon-upload-audio-file" 
+	 accept=".mp3,.mp4,.mpg,.mpeg" />
 </div>
-<script type="text/javascript">
-jQuery(document).ready(function($){
-
-    $('#fcc-stow-sermon-pick-new-file-button').click(function(){
-    
-       window.open( url );
-      });
-
-});
-</script>
+  
