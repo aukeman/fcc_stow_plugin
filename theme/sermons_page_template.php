@@ -25,6 +25,7 @@ div.entry-content
 div.fcc-stow-sermon-post
 {
  overflow:hidden;
+ white-space:nowrap;
 }
 
 div.fcc-stow-sermon-post h2,span,a
@@ -45,11 +46,13 @@ div.fcc-stow-sermon-post span.fcc-stow-sermon-title
 
 div.fcc-stow-sermon-post span.fcc-stow-sermon-speaker
 {
+ width:auto;
 }
 
 div.fcc-stow-sermon-post a.fcc-stow-sermon-audio-file
 {
-  float:right;
+  position:absolute;
+  right:0px;
 }
       </style>
       <?php while ( have_posts() ) : the_post(); ?>
