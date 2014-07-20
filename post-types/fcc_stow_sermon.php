@@ -64,6 +64,8 @@ function fcc_stow_sermon_init()
 
   register_post_type( FCC_STOW_SERMONS_TYPE, $args );
 
+  add_filter( "the_content", "fcc_stow_sermon_post_apply_metadata" );
+  add_filter( "the_title", "fcc_stow_sermon_add_quotes_to_title" );
 }
 
 function fcc_stow_sermon_admin_init()
@@ -89,6 +91,18 @@ function fcc_stow_sermon_admin_init()
 
 function fcc_stow_sermon_post_edit_form_tag( ) {
     echo ' enctype="multipart/form-data"';
+}
+
+function fcc_stow_sermon_add_quotes_to_title($title)
+{
+  if ( in_the_loop() && get_post_type() == FCC_STOW_SERMONS_TYPE )
+  {
+    return '&ldquo;'.$title.'&rdquo;';
+  }
+  else
+  {
+    return $title;
+  }
 }
 
 function fcc_stow_sermon_add_meta_boxes()
@@ -226,8 +240,23 @@ function fcc_stow_sermon_append_sermon_page_content( $content )
 {
   ob_start();
   include ( dirname(__FILE__) . 
-	   "/../templates/archive-fcc-stow-sermon-archive.php" );
+	   "/../templates/fcc-stow-sermon-archive.php" );
   return $content . ob_get_clean();
+}
+
+function fcc_stow_sermon_post_apply_metadata( $content ) {
+
+  if ( is_singular(FCC_STOW_SERMONS_TYPE) )
+  {
+    ob_start();
+    include ( dirname(__FILE__) . 
+	      "/../templates/fcc-stow-sermon-single.php" );
+    return ob_get_clean().$content;
+  }
+  else
+  {
+    return $content;
+  }
 }
 
 function fcc_stow_sermon_rewrite_flush()

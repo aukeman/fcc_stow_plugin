@@ -16,7 +16,7 @@ while ( $sermon_query->have_posts() ) : $sermon_query->the_post();
 <div id="post-<?php the_ID() ?>" class="fcc-stow-sermon fcc-stow-sermon-post status-<?php echo get_post_status() ?>">
   <span class="fcc-stow-sermon-date"><?php echo get_the_date() ?></span>
   <span class="fcc-stow-sermon-title">
-    <a href="<?php the_permalink() ?>" title="Permalink to <?php the_title()?>" rel="bookmark">&ldquo;<?php the_title() ?>&rdquo;</a>
+    <a href="<?php the_permalink() ?>" title="Permalink to <?php the_title()?>" rel="bookmark"><?php the_title() ?></a>
   </span>
   <span><?php fcc_stow_sermon_the_speaker() ?></span>
   <?php fcc_stow_sermon_the_audio_file_link() ?>
