@@ -1,24 +1,23 @@
+<table class="fcc-stow-sermon-archive-container">
 <?php
 
 // uses
 //      FCC_STOW_SERMONS_TYPE 
 // constant
 
-$sermon_query = new WP_Query( "post_type=".FCC_STOW_SERMONS_TYPE );
-while ( $sermon_query->have_posts() ) : $sermon_query->the_post(); 
-  $guest_speaker = get_post_meta( get_the_ID(), 
-	           		  'fcc-stow-sermon-guest-speaker', 
-				  true ); 
-  $audio_file = get_post_meta(get_the_ID(), 
-			      'fcc-stow-sermon-audio-file', 
-			      true);
-?>
-<div id="post-<?php the_ID() ?>" class="fcc-stow-sermon fcc-stow-sermon-post status-<?php echo get_post_status() ?>">
-  <span class="fcc-stow-sermon-date"><?php echo get_the_date() ?></span>
-  <span class="fcc-stow-sermon-title">
-    <a href="<?php the_permalink() ?>" title="Permalink to <?php the_title()?>" rel="bookmark"><?php the_title() ?></a>
-  </span>
-  <span><?php fcc_stow_sermon_the_speaker() ?></span>
-  <?php fcc_stow_sermon_the_audio_file_link() ?>
-</div> <!-- #post-<?php the_ID() ?> -->
+$sermon_query = new WP_Query( array('post_type' => FCC_STOW_SERMONS_TYPE) );
+while ( $sermon_query->have_posts() ) : $sermon_query->the_post(); ?>
+<?php if ( $sermon_year = fcc_stow_sermon_get_the_year() ) : ?>
+  <tr>
+    <th colspan="4" class="fcc-stow-sermon-archive-year"><?php echo $sermon_year?></th>
+  </tr>
+<?php $first_row = false; endif ?>
+<tr id="post-<?php the_ID() ?>" >
+  <td class="fcc-stow-sermon-archive-date"><?php the_date("F j") ?></td>
+  <td class="fcc-stow-sermon-archive-title"><a href="<?php the_permalink() ?>"><?php the_title() ?></a></td>
+  <td class="fcc-stow-sermon-archive-speaker"><?php fcc_stow_sermon_the_speaker() ?></td>
+  <td class="fcc-stow-sermon-archive-audio"><?php fcc_stow_sermon_the_audio_file_link() ?>
+</tr>
 <?php endwhile; wp_reset_postdata(); ?>
+</table>
+

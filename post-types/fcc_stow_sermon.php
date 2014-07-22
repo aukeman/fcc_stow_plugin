@@ -3,6 +3,22 @@
 const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermon";
 const FCC_STOW_SERMONS_PAGE_SETTING = "fcc-stow-sermon-sermons-page";
 
+
+function fcc_stow_sermon_get_the_year()
+{
+  static $last_year = 0;
+
+  $year = get_the_time('Y');
+
+  if ( $year == $last_year ){
+    return;
+  }
+
+  $last_year = $year;
+
+  return $year;
+}
+
 function fcc_stow_sermon_the_speaker()
 {
    $guest_speaker = 
