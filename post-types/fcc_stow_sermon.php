@@ -1,7 +1,7 @@
 <?php
 
-const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermon";
-const FCC_STOW_SERMONS_PAGE_SETTING = "fcc-stow-sermon-sermons-page";
+/* const FCC_STOW_SERMONS_TYPE = "fcc-stow-sermon"; */
+/* const FCC_STOW_SERMONS_PAGE_SETTING = "fcc-stow-sermon-sermons-page"; */
 
 
 function fcc_stow_sermon_get_the_year()
@@ -26,7 +26,7 @@ function fcc_stow_sermon_the_speaker()
                     'fcc-stow-sermon-guest-speaker', 
 		    true ); 
 			 
-   echo ($guest_speaker == "" ? the_author() : htmlspecialchars( $guest_speaker) );
+   echo ($guest_speaker == "" ? get_the_author() : htmlspecialchars( $guest_speaker) );
 }
 
 function fcc_stow_sermon_the_audio_file_link( $class = "fcc-stow-sermon-audio-file", 
@@ -78,7 +78,7 @@ function fcc_stow_sermon_init()
 		 "rewrite" => array( "slug" => "sermon" ),
 		 "supports" => array( "title", "author", "editor" ));
 
-  register_post_type( FCC_STOW_SERMONS_TYPE, $args );
+  register_post_type( "fcc-stow-sermon", $args );
 
   add_filter( "the_content", "fcc_stow_sermon_post_apply_metadata" );
   add_filter( "the_title", "fcc_stow_sermon_add_quotes_to_title" );
@@ -91,7 +91,7 @@ function fcc_stow_sermon_admin_init()
   add_action( 'post_edit_form_tag' , 'fcc_stow_sermon_post_edit_form_tag' );
 
   register_setting( 'fcc_stow_sermon_setting-group', 
-		    FCC_STOW_SERMONS_PAGE_SETTING );
+		    "fcc-stow-sermon-sermons-page" );
 
   add_settings_section( 'fcc_stow_sermon_setting-section', 
 			'Sermon Settings', 
@@ -111,7 +111,7 @@ function fcc_stow_sermon_post_edit_form_tag( ) {
 
 function fcc_stow_sermon_add_quotes_to_title($title)
 {
-  if ( in_the_loop() && get_post_type() == FCC_STOW_SERMONS_TYPE )
+  if ( in_the_loop() && get_post_type() == "fcc-stow-sermon" )
   {
     return '&ldquo;'.$title.'&rdquo;';
   }
@@ -126,17 +126,17 @@ function fcc_stow_sermon_add_meta_boxes()
   add_meta_box( "fcc-stow-sermon-guest-speaker-meta",
 		"Set Guest Speaker",
 		"fcc_stow_sermon_add_guest_speaker_meta_boxes",
-		FCC_STOW_SERMONS_TYPE );
+		"fcc-stow-sermon" );
 
   add_meta_box( "fcc-stow-sermon-scripture-meta",
 		"Set Scripture Passage",
 		"fcc_stow_sermon_add_scripture_meta_boxes",
-		FCC_STOW_SERMONS_TYPE );
+		"fcc-stow-sermon" );
 
   add_meta_box( "fcc-stow-sermon-audio-file-meta",
 		"Set Audio File",
 		"fcc_stow_sermon_add_audio_file_meta_boxes",
-		FCC_STOW_SERMONS_TYPE );
+		"fcc-stow-sermon" );
 }
 
 function fcc_stow_sermon_settings_section()
@@ -146,8 +146,8 @@ function fcc_stow_sermon_settings_section()
 
 function fcc_stow_sermon_settings_add_page()
 {
-  $field_id = FCC_STOW_SERMONS_PAGE_SETTING;
-  $selected_page_id = get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1);
+  $field_id = "fcc-stow-sermon-sermons-page";
+  $selected_page_id = get_option("fcc-stow-sermon-sermons-page", -1);
 
   include ( dirname(__FILE__) . 
 	   "/../templates/select_page_dropdown.php" );
@@ -194,7 +194,7 @@ function fcc_stow_sermon_add_audio_file_meta_boxes($post)
 function fcc_stow_sermon_save($post_id)
 {
   if ( !isset($_POST['post_type']) ||
-       $_POST['post_type'] != FCC_STOW_SERMONS_TYPE ||
+       $_POST['post_type'] != "fcc-stow-sermon" ||
        !current_user_can('edit_post', $post_id) ||
 
        // Stop WP from clearing custom fields on autosave
@@ -246,7 +246,7 @@ function fcc_stow_sermon_save($post_id)
 
 function fcc_stow_sermon_template_redirect( $query )
 {
-  if ( is_page( get_option(FCC_STOW_SERMONS_PAGE_SETTING, -1) ) )
+  if ( is_page( get_option("fcc-stow-sermon-sermons-page", -1) ) )
   {
     add_filter( 'the_content', 'fcc_stow_sermon_append_sermon_page_content' );
   }
@@ -262,7 +262,7 @@ function fcc_stow_sermon_append_sermon_page_content( $content )
 
 function fcc_stow_sermon_post_apply_metadata( $content ) {
 
-  if ( is_singular(FCC_STOW_SERMONS_TYPE) )
+  if ( is_singular("fcc-stow-sermon") )
   {
     ob_start();
     include ( dirname(__FILE__) . 

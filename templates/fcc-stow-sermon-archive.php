@@ -5,7 +5,7 @@
 //      FCC_STOW_SERMONS_TYPE 
 // constant
 
-$sermon_query = new WP_Query( array('post_type' => FCC_STOW_SERMONS_TYPE) );
+$sermon_query = new WP_Query( array('post_type' => "fcc-stow-sermon", 'posts_per_page' => 52) );
 while ( $sermon_query->have_posts() ) : $sermon_query->the_post(); ?>
 <?php if ( $sermon_year = fcc_stow_sermon_get_the_year() ) : ?>
   <tr>
